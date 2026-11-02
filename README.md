@@ -95,7 +95,7 @@ python eval.py method=gsc
 This runs the baseline (`CVP.gsc_sample`) with the same checkpoint and chunks, and writes to `outputs/gsc/`. Following [DiffCollage](https://arxiv.org/abs/2303.17076), it averages the overlapping tokens of neighboring chunks after every deterministic DDIM step and writes the start and goal tokens back. [Generative Skill Chaining (GSC)](https://arxiv.org/abs/2401.03360) extends the same formulation to robot task-and-motion planning as DiffCollage follow-up work, which is where the sampler gets its name. In the videos above, the averaged chunks drift and leave gaps between the factors, while our sampler converges to a single consistent flower.
 
 ## 🙏 Acknowledgement
-* The implementation of DDPM and DiT is adapted from [CleanDiffuser](https://github.com/CleanDiffuserTeam/CleanDiffuser).
+* The implementation of DDPM and DiT is adapted from [CleanDiffuser](https://github.com/CleanDiffuserTeam/CleanDiffuser) (Apache-2.0).
 
 Contact [Yixin Zhang](mailto:yzhang4179@gatech.edu) if you have any questions or suggestions.
 
