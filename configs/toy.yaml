@@ -1,0 +1,66 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+# === General ===
+seed: 0
+device: cuda
+hf_repo: comp-visual-planning/toy-example   # data and checkpoint are downloaded from here when missing locally
+
+# === Data ===
+data_path: data/toy.npy
+horizon: 240                 # points per training clip (a petal is 200 points)
+points_per_token: 30         # points per diffusion token: in_dim = 2 * 30 = 60, tokens per clip = 240 / 30 = 8
+# datagen.py
+n_episodes: 64               # rotated copies of the flower
+points_per_episode: 600      # three 120 degree arcs of 200 points
+data_noise: 0.001            # std of the Gaussian noise added to the arc points
+dataset_figure: data/dataset.png
+dataset_figure_episodes: 15  # episodes shown in the preview figure
+overwrite: false             # overwrite an existing data_path
+
+# === Model ===
+emb_dim: 256
+d_model: 384
+n_heads: 12
+depth: 6
+dropout: 0.1
+diffusion_steps: 500
+predict_noise: false
+beta_schedule: cosine
+
+# === Training ===
+batch_size: 128
+num_workers: 8
+lr: 1.0e-4
+gradient_steps: 1000000
+log_interval: 200
+save_interval: 30000
+ckpt_dir: ckpts
+
+# === Inference ===
+method: cvp                  # cvp (ours) | gsc (DiffCollage / Generative Skill Chaining baseline)
+ckpt_path: ckpts/diffusion_420000.ckpt
+episode: 0                   # training episode whose first / last token are used as start / goal
+sample_steps: 300
+canon_horizon: 20            # tokens in the composed plan: 20 * 30 = 600 points, one full flower
+stride: 6                    # token offset between chunks: chunks (0, 8), (6, 14), (12, 20) overlap by 2 tokens
+horizon_ctx: [[1, 2], [2, 2], [2, 1]]   # per chunk: number of start / end tokens tied to its neighbors
+temperature: 1.0
+# guidance (cvp only)
+wg: 0.02                     # share of the guidance direction in the DDIM noise
+discount: 0.5                # decay of the fwd / bwd losses per chunk away from the start / goal
+w_sync: 0.05                 # weight of the sync loss
+# outputs
+output_dir: outputs/${method}
+video_fps: 6
+video_stride: 9              # keep one frame every 9 denoising steps
+video_hold: 10               # repeat the final frame this many times
+
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+  job:
+    chdir: false

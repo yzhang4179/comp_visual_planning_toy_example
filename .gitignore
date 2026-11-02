@@ -1,0 +1,23 @@
+# data, checkpoints and results are not tracked, see the README for the Hugging Face links
+data/
+ckpts/
+outputs/
+*.ckpt
+*.npy
+*.mp4
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# hydra / logs
+.hydra/
+*.log
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store
